@@ -208,6 +208,27 @@ public class Matrix
 	}
 	
 	/**
+	 * Deletes the row of index delete from elements
+	 * @param delete The index of the row to delete
+	 */
+	public void deleteRow(int delete)
+	{
+		double[][] deleted = new double[rows - 1][columns];
+		for (int i = 0; i < rows; i++) {
+			System.out.println(i);
+			for (int j = 0; j < columns; j++)
+			{
+				if (i < delete) 
+					deleted[i][j] = elements[i][j];
+				else if (i > delete) 
+					deleted[i - 1][j] = elements[i][j]; 
+			}
+		}
+		rows = rows - 1;
+		elements = deleted;
+	}
+	
+	/**
 	 * Converts this Matrix to the n by n identity matrix
 	 * @param n The row/column number of the new matrix
 	 */
@@ -235,5 +256,22 @@ public class Matrix
 		int newCols = rows;
 		rows = columns;
 		columns = newCols;
+	}
+	
+	/**
+	 * Returns the determinant of this Matrix
+	 * @return The determinant of this Matrix
+	 */
+	public double determinant()
+	{
+		if (rows != 2 || columns != 2) 
+		{
+			throw new java.lang.RuntimeException("Cannot compute determinant.");
+		}
+		else
+		{
+			return elements[0][0] * elements[1][1] - 
+					elements[1][0] * elements[0][1];
+		}
 	}
 }
