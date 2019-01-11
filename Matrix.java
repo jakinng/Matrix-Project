@@ -211,21 +211,63 @@ public class Matrix
 	 * Deletes the row of index delete from elements
 	 * @param delete The index of the row to delete
 	 */
-	public void deleteRow(int delete)
+	public void deleteRow(int delete) throws ArrayIndexOutOfBoundsException
 	{
-		double[][] deleted = new double[rows - 1][columns];
-		for (int i = 0; i < rows; i++) {
-			System.out.println(i);
-			for (int j = 0; j < columns; j++)
+		try
+		{
+			double[][] deleted = new double[rows - 1][columns];
+			for (int i = 0; i < rows; i++) 
 			{
-				if (i < delete) 
-					deleted[i][j] = elements[i][j];
-				else if (i > delete) 
-					deleted[i - 1][j] = elements[i][j]; 
+				for (int j = 0; j < columns; j++)
+				{
+					if (i < delete) 
+						deleted[i][j] = elements[i][j];
+					else if (i > delete) 
+						deleted[i - 1][j] = elements[i][j]; 
+				}
 			}
+			rows = rows - 1;
+			elements = deleted;
 		}
-		rows = rows - 1;
-		elements = deleted;
+		catch (ArrayIndexOutOfBoundsException ex)
+		{
+			System.out.println("Invalid Row.");
+		}
+	}
+	
+	/**
+	 * Deletes the column of index delete from elements
+	 * @param delete The index of the column to delete
+	 */
+	public void deleteColumn(int delete) throws ArrayIndexOutOfBoundsException
+	{
+		try
+		{
+			double[][] deleted = new double[rows][columns - 1];
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < columns; j++)
+				{
+					if (j < delete)
+						deleted[i][j] = elements[i][j];
+					else if (j > delete)
+						deleted[i][j - 1] = elements[i][j];
+				}
+			}
+			columns -= 1;
+			elements = deleted;
+		}
+		catch (ArrayIndexOutOfBoundsException ex)
+		{
+			System.out.println("Invalid Column.");
+		}
+	}
+	
+	public static void main(String[] args)
+	{
+		Matrix mat = new Matrix(new double[][] {{0}});
+		mat.identity(5);
+		System.out.print(mat.determinant());
 	}
 	
 	/**
@@ -264,14 +306,50 @@ public class Matrix
 	 */
 	public double determinant()
 	{
-		if (rows != 2 || columns != 2) 
+//		double determinant = 0;
+//		if (rows != columns)
+//		{
+//			throw new RuntimeException("Non-square.");
+//		}
+//		else if (rows == 2 && columns == 2)
+//		{
+//			determinant += elements[0][0] * elements[1][1] - 
+//					elements[1][0] * elements[0][1];
+//		}
+//		else if (rows == 3 && columns == 3)
+//		{
+//			Matrix smaller;
+//			double multiply;
+//			for (int i = 0; i < 3; i++)
+//			{
+//				smaller = new Matrix(elements);
+//				multiply = smaller.getElements()[i][0];
+//				smaller.deleteRow(i);
+//				smaller.deleteColumn(0);
+//				determinant += multiply * smaller.determinant() * Math.pow(-1, i);
+//			}
+//		}
+//		return determinant;
+		double determinant = 0;
+		if (rows == 2 && columns == 2)
 		{
-			throw new java.lang.RuntimeException("Cannot compute determinant.");
+			determinant += elements[0][0] * elements[1][1] - 
+					elements[1][0] * elements[0][1];
+			return determinant;	
 		}
 		else
 		{
-			return elements[0][0] * elements[1][1] - 
-					elements[1][0] * elements[0][1];
+			Matrix smaller;
+			double multiply;
+			for (int i = 0; i < rows; i++)
+			{
+				smaller = new Matrix(elements);
+				multiply = smaller.getElements()[i][0];
+				smaller.deleteRow(i);
+				smaller.deleteColumn(0);
+				determinant += multiply *smaller.determinant() * Math.pow(-1, i);
+			}
+			return determinant;
 		}
 	}
 }
