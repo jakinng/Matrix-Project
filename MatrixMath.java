@@ -18,8 +18,7 @@ public class MatrixMath
 		if (mat1.getRows() != mat2.getRows()
 				|| mat1.getColumns() != mat2.getColumns())
 		{
-			System.out.println("They do not have the same dimensions.");
-			return new Matrix(new double[0][0]);
+			throw new java.lang.RuntimeException("They do not have the same dimensions.");
 		}
 		else
 		{
@@ -82,8 +81,7 @@ public class MatrixMath
 		//if they cannot be multiplied
 		if (mat1.getColumns() != mat2.getRows())
 		{
-			System.out.println("They do not have the same dimensions.");
-			return new Matrix(new double[0][0]);
+			throw new java.lang.RuntimeException("They cannot be multiplied.");
 		}
 		else
 		{

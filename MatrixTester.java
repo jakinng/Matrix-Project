@@ -7,7 +7,7 @@ public class MatrixTester
 {
 	public static void main(String[] args)
 	{
-		math4();
+		tester3();
 	}
 	
 	/**
@@ -101,5 +101,14 @@ public class MatrixTester
 		Matrix mat4 = new Matrix(new double[][] {{0, 1}, {0, 1}, {0, 1}});
 		System.out.println(MatrixMath.multiply(mat3, mat4));
 		System.out.println(MatrixMath.multiply(mat4, mat3));
+	}
+	
+	public static void tester3()
+	{
+		Matrix zero = new Matrix(2, 2);
+		Matrix different = new Matrix(new double[][] {{1, 2}, {2, 1}});
+		System.out.println(zero.determinant() + " " + different.determinant());
+		different.deleteRow(0);
+		System.out.println(different); 
 	}
 }
