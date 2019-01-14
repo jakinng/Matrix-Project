@@ -7,108 +7,116 @@ public class MatrixTester
 {
 	public static void main(String[] args)
 	{
-		tester3();
 	}
 	
 	/**
-	 * Tests the Matrix class
+	 * Tests the add method of the MatrixMath class
 	 */
-	public static void tester()
+	//HEY JAKIN TEST NEGATIVE NUMBERS TOSTRING
+	//TRY-CATCH FOR MATRIX MATH??
+	public static void addTest()
 	{
-		Matrix mat1 = new Matrix(3, 4);
-		System.out.println(mat1);
-		
-		double[][] mat2Arr = {{1, 2, 3}, {1, 3, 3}, {1, 2, 3}, {2, 3, 4}};
-		Matrix mat2 = new Matrix(mat2Arr);
-		System.out.println(mat2);
-		System.out.println("rows: " + mat2.getRows());
-		System.out.println("columns: " + mat2.getColumns());
-		mat2.setRows(5);
-		System.out.println(mat2);
-		mat2.setRows(3);
-		System.out.println(mat2);
-		mat2.setColumns(4);
-		System.out.println(mat2);
-		mat2.setColumns(3);
-		System.out.println(mat2);
-		mat2Arr = new double[][] {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-		mat2.setElements(mat2Arr);
-		System.out.println(mat2);
+		//tests empty matrices
+		Matrix mat = new Matrix(0, 0);
+		Matrix mat2 = new Matrix(0, 0);
+		System.out.println(mat + " + " + mat2 + " = "
+				+ MatrixMath.add(mat, mat2));
+		//tests 1x1 matrices
+		mat = new Matrix(new double[][] {{0}});
+		mat2 = new Matrix(new double[][] {{1}});
+		System.out.println(mat + " + " + mat2 + " = "
+				+ MatrixMath.add(mat, mat2));
+		mat = new Matrix(new double[][] {{0, 1}}); //1x2 matrices
+		mat2 = new Matrix(new double[][] {{1, 2}});
+		System.out.println(mat + " + " + mat2 + " = "
+				+ MatrixMath.add(mat, mat2));
+		mat = new Matrix(new double[][] {{3}, {1}}); //2x1 matrices
+		mat2 = new Matrix(new double[][] {{2}, {-5}});
+		System.out.println(mat + "\n+\n" + mat2 + "\n=\n"
+				+ MatrixMath.add(mat, mat2));
+		mat = new Matrix(new double[][] {{3, 1}, {2, 1}});
+		mat2 = new Matrix(new double[][] {{1, 2}, {-1, -5}});
+		System.out.println(mat + "\n+\n" + mat2 + "\n=\n"
+				+ MatrixMath.add(mat, mat2));
+		//tests matrices that we cannot add
+		mat = new Matrix(new double[][] {{3, 1}, {2, 1}});
+		mat2 = new Matrix(new double[][] {{1, 2}});
+		System.out.println(mat + "\n+\n" + mat2 + "\n=\n"
+				+ MatrixMath.add(mat, mat2));
 	}
 	
-	public static void tester2()
+	/**
+	 * Tests the subtract method of the MatrixMath class
+	 */
+	public static void subtractTest()
 	{
-		double[][] mat2Arr = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-		Matrix mat2 = new Matrix(mat2Arr);
-		System.out.println(mat2.equals(3));
-		System.out.println(mat2.equals(new String("hello")));
-		double[][] mat3Arr = {{1, 2, 3}, {1, 3, 3}, {1, 2, 3}, {2, 3, 4}};
-		Matrix mat3 = new Matrix(mat3Arr);
-		double[][] mat4Arr = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-		Matrix mat4 = new Matrix(mat4Arr);
-		System.out.println(mat2.equals(mat3));
-		System.out.println(mat2.equals(mat4));
+		Matrix mat = new Matrix(0, 0); //empty matrices
+		Matrix mat2 = new Matrix(0, 0);
+		System.out.println(mat + " - " + mat2 + " = "
+				+ MatrixMath.subtract(mat, mat2));
+		mat = new Matrix(new double[][] {{0}}); //1x1 matrices
+		mat2 = new Matrix(new double[][] {{1}});
+		System.out.println(mat + " - " + mat2 + " = "
+				+ MatrixMath.subtract(mat, mat2));
+		mat = new Matrix(new double[][] {{0, 1}}); //1x2 matrices
+		mat2 = new Matrix(new double[][] {{1, 2}});
+		System.out.println(mat + " - " + mat2 + " = "
+				+ MatrixMath.subtract(mat, mat2));
+		mat = new Matrix(new double[][] {{3}, {1}}); //2x1 matrices
+		mat2 = new Matrix(new double[][] {{2}, {-5}});
+		System.out.println(mat + "\n-\n" + mat2 + "\n=\n"
+				+ MatrixMath.subtract(mat, mat2));
+		mat = new Matrix(new double[][] {{3, 1}, {2, 1}}); //2x2 matrices
+		mat2 = new Matrix(new double[][] {{1, 2}, {-1, -5}});
+		System.out.println(mat + "\n-\n" + mat2 + "\n=\n"
+				+ MatrixMath.subtract(mat, mat2));
+		//tests matrices we cannot subtract
+		mat = new Matrix(new double[][] {{3, 1}, {2, 1}});
+		mat2 = new Matrix(new double[][] {{1, 2}});
+		System.out.println(mat + "\n-\n" + mat2 + "\n=\n"
+				+ MatrixMath.subtract(mat, mat2));
 	}
 	
-	public static void math()
+	/**
+	 * Tests the scalar version of the 
+	 * multiply method of the MatrixMath class
+	 */
+	public static void scalarMultTest()
 	{
-		Matrix mat1 = new Matrix(2, 2);
-		Matrix mat2 = new Matrix(1, 2);
-		mat2.identity(2);
-		Matrix mat3 = new Matrix(new double[][] {{1, 2}, {3, 4}});
-		System.out.println(MatrixMath.add(mat1, mat2));
-		System.out.println(MatrixMath.add(mat1, mat3));
-		System.out.println(MatrixMath.add(mat2, mat3));
-		mat3.transpose();
-		System.out.println(mat3);
+		Matrix mat = new Matrix(0, 0); //empty matrix
+		System.out.println("0 * " + mat + " = " + MatrixMath.multiply(0, mat));
+		System.out.println("1 * " + mat + " = " + MatrixMath.multiply(1, mat));
+		mat = new Matrix(new double[][] {{1}}); //1x1 matrix
+		System.out.println("0 * " + mat + " = " + MatrixMath.multiply(0, mat));
+		System.out.println("1 * " + mat + " = " + MatrixMath.multiply(1, mat));
+		System.out.println("2 * " + mat + " = " + MatrixMath.multiply(2, mat));
+		mat = new Matrix(new double[][] {{1, 2}, {3, 4}}); //2x2 matrix
+		System.out.println("-1.5 * \n" + mat + " = \n" + MatrixMath.multiply(-1.5, mat));
+		System.out.println("2 * \n" + mat + " = \n" + MatrixMath.multiply(2, mat));
+		mat = new Matrix(new double[][] {{1, 2}}); //1x2 matrix
+		System.out.println("-2.4 * " + mat + " = " + MatrixMath.multiply(-2.4, mat));
+		System.out.println("2 * " + mat + " = " + MatrixMath.multiply(2, mat));
 	}
 	
-	public static void math2()
+	/**
+	 * Tests the matrix version of the 
+	 * multiply method of the MatrixMath class
+	 */
+	public static void matMultTest()
 	{
-		Matrix mat1 = new Matrix(3, 2);
-		Matrix mat2 = new Matrix(2, 2);
-		Matrix mat3 = new Matrix(new double[][] {{1, 2}, {1, 3}, {1, 2}});
-		Matrix mat4 = new Matrix(new double[][] {{1, 1}, {1, 1}, {1, 1}});
-		System.out.println(MatrixMath.add(mat1, mat3));
-		System.out.println(MatrixMath.add(mat3, mat4));
-		System.out.println(MatrixMath.add(mat2, mat1));
-		mat3.transpose();
-		System.out.println(mat3);
-	}
-	
-	public static void math3()
-	{
-		Matrix mat1 = new Matrix(3, 2);
-		Matrix mat2 = new Matrix(2, 2);
-		Matrix mat3 = new Matrix(new double[][] {{1, 2}, {1, 3}, {1, 2}});
-		Matrix mat4 = new Matrix(new double[][] {{1, 1}, {1, 1}, {1, 1}});
-		System.out.println(MatrixMath.subtract(mat1, mat3));
-		System.out.println(MatrixMath.subtract(mat3, mat4));
-		System.out.println(MatrixMath.subtract(mat2, mat1));
-		System.out.println(MatrixMath.multiply(2, mat3));
-	}
-	
-	public static void math4()
-	{
-		Matrix zero = new Matrix(2, 2);
-		Matrix id = new Matrix(0, 0);
-		id.identity(2);
-		Matrix mat3 = new Matrix(new double[][] {{1, 2}, {1, 2}});
-		System.out.println(MatrixMath.multiply(zero, mat3));
-		System.out.println(MatrixMath.multiply(id, mat3));
-		System.out.println(MatrixMath.multiply(mat3, id));
-		
-		Matrix mat4 = new Matrix(new double[][] {{0, 1}, {0, 1}, {0, 1}});
-		System.out.println(MatrixMath.multiply(mat3, mat4));
-		System.out.println(MatrixMath.multiply(mat4, mat3));
-	}
-	
-	public static void tester3()
-	{
-		Matrix zero = new Matrix(2, 2);
-		Matrix different = new Matrix(new double[][] {{1, 2}, {2, 1}});
-		System.out.println(zero.determinant() + " " + different.determinant());
-		different.deleteRow(0);
-		System.out.println(different); 
+		Matrix mat = new Matrix(0, 0); //empty matrix
+		Matrix mat2 = new Matrix(0, 0);
+		System.out.println("" + mat + mat2 + " = " + MatrixMath.multiply(mat, mat2));
+		mat = new Matrix(new double[][] {{1, 2}, {2, 3}}); //2x2 by 2x2
+		mat2 = new Matrix(new double[][] {{2, 3}, {3, 2}});
+		System.out.println(mat + "* \n" + mat2 + " =\n" + MatrixMath.multiply(mat, mat2));
+		mat = new Matrix(new double[][] {{1, 2}}); //1x2 by 2x1
+		mat2 = new Matrix(new double[][] {{2}, {1}});
+		System.out.println(mat + "* \n" + mat2 + " =\n" + MatrixMath.multiply(mat, mat2));
+		mat = new Matrix(new double[][] {{1, 2}, {3, 4}, {2, 3}}); //3x2 by 2x4
+		mat2 = new Matrix(new double[][] {{2, 3, 4, 5}, {1, 1, 2, 3}});
+		System.out.println(mat + "* \n" + mat2 + " =\n" + MatrixMath.multiply(mat, mat2));
+		//2x4 by 3x2
+		System.out.println(mat2 + "* \n" + mat + " =\n" + MatrixMath.multiply(mat2, mat));
 	}
 }
