@@ -158,21 +158,33 @@ public class Matrix
 	@Override
 	public String toString()
 	{
+		//starting the matrix string with a bracket
 		String matStr = "{";
 		for (int i = 0; i < elements.length; i++)
 		{
 			for (int j = 0; j < elements[i].length; j++)
 			{
+				//if it's the last element
+				//considers whether it's a 1x1 or nx1 matrix
 				if (i == elements.length - 1 && j == elements[i].length - 1) 
-					matStr += elements[i][j];
+				{
+					if (elements[i].length != 1 || elements.length == 1)
+						matStr += elements[i][j];
+					else
+						matStr += " " + elements[i][j];
+				}
+				//if not the first element, a space before and a comma
 				else if (i != 0 && j == 0)
 					matStr += " " + elements[i][j] + ", ";
+				//otherwise add element and comma
 				else
 					matStr += elements[i][j] + ", ";
 			}
+			//new line if it's not the last row
 			if (i != elements.length - 1)
 				matStr += "\n";
 		}
+		//ends it with a closing bracket
 		matStr += "}";
 		return matStr;
 	}
@@ -198,8 +210,10 @@ public class Matrix
 			else
 			{
 				boolean equals = true;
+				//iterates through rows and columns
 				for (int i = 0; i < rows; i++)
 					for (int j = 0; j < columns; j++)
+						//if two elements aren't equal, the two Matrices aren't
 						if (elements[i][j] != otherElts[i][j])
 							equals = false;
 				return equals;
@@ -211,27 +225,21 @@ public class Matrix
 	 * Deletes the row of index delete from elements
 	 * @param delete The index of the row to delete
 	 */
-	public void deleteRow(int delete) throws ArrayIndexOutOfBoundsException
+	public void deleteRow(int delete) throws ArrayIndexOutOfBoundsException, NegativeArraySizeException
 	{
 		try
 		{
-			double[][] deleted = new double[rows - 1][columns];
-			for (int i = 0; i < rows; i++) 
-			{
-				for (int j = 0; j < columns; j++)
-				{
-					if (i < delete) 
-						deleted[i][j] = elements[i][j];
-					else if (i > delete) 
-						deleted[i - 1][j] = elements[i][j]; 
-				}
-			}
-			rows = rows - 1;
-			elements = deleted;
+			makeDeletedRow(delete);
 		}
+		//catches the condition where the row is greater 
+		//than the number of rows in the Matrix
 		catch (ArrayIndexOutOfBoundsException ex)
 		{
 			System.out.println("Invalid Row.");
+		}
+		catch (NegativeArraySizeException ex)
+		{
+			System.out.println("Empty Array.");
 		}
 	}
 	
@@ -239,35 +247,21 @@ public class Matrix
 	 * Deletes the column of index delete from elements
 	 * @param delete The index of the column to delete
 	 */
-	public void deleteColumn(int delete) throws ArrayIndexOutOfBoundsException
+	public void deleteColumn(int delete) throws ArrayIndexOutOfBoundsException, NegativeArraySizeException
 	{
 		try
 		{
-			double[][] deleted = new double[rows][columns - 1];
-			for (int i = 0; i < rows; i++)
-			{
-				for (int j = 0; j < columns; j++)
-				{
-					if (j < delete)
-						deleted[i][j] = elements[i][j];
-					else if (j > delete)
-						deleted[i][j - 1] = elements[i][j];
-				}
-			}
-			columns -= 1;
-			elements = deleted;
+			makeDeletedColumn(delete);
 		}
+		//catches the case where delete is more than the number of columns
 		catch (ArrayIndexOutOfBoundsException ex)
 		{
 			System.out.println("Invalid Column.");
 		}
-	}
-	
-	public static void main(String[] args)
-	{
-		Matrix mat = new Matrix(new double[][] {{0}});
-		mat.identity(5);
-		System.out.print(mat.determinant());
+		catch (NegativeArraySizeException ex)
+		{
+			System.out.println("Empty Array.");
+		}
 	}
 	
 	/**
@@ -290,11 +284,15 @@ public class Matrix
 	 */
 	public void transpose()
 	{
+		//new array corresponding to the transposed matrix
 		double[][] tPoseArr = new double[columns][rows];
+		//iterates through elements and adds them to tPoseArr
+		//in the new place
 		for (int i = 0; i < columns; i++)
 			for (int j = 0; j < rows; j++)
 				tPoseArr[i][j] = elements[j][i];
 		elements = tPoseArr;
+		//updates the PIVs
 		int newCols = rows;
 		rows = columns;
 		columns = newCols;
@@ -304,52 +302,109 @@ public class Matrix
 	 * Returns the determinant of this Matrix
 	 * @return The determinant of this Matrix
 	 */
-	public double determinant()
+	public double determinant() 
 	{
-//		double determinant = 0;
-//		if (rows != columns)
-//		{
-//			throw new RuntimeException("Non-square.");
-//		}
-//		else if (rows == 2 && columns == 2)
-//		{
-//			determinant += elements[0][0] * elements[1][1] - 
-//					elements[1][0] * elements[0][1];
-//		}
-//		else if (rows == 3 && columns == 3)
-//		{
-//			Matrix smaller;
-//			double multiply;
-//			for (int i = 0; i < 3; i++)
-//			{
-//				smaller = new Matrix(elements);
-//				multiply = smaller.getElements()[i][0];
-//				smaller.deleteRow(i);
-//				smaller.deleteColumn(0);
-//				determinant += multiply * smaller.determinant() * Math.pow(-1, i);
-//			}
-//		}
-//		return determinant;
-		double determinant = 0;
-		if (rows == 2 && columns == 2)
+		if (elements.length == 0)
 		{
-			determinant += elements[0][0] * elements[1][1] - 
-					elements[1][0] * elements[0][1];
-			return determinant;	
+			System.out.println("The matrix is empty.");
+			return 0;
+		}
+		else if (rows != columns)
+		{
+			System.out.println("The matrix is not square.");
+			return 0;
 		}
 		else
+			return computeDet();
+	}
+	
+	/**
+	 * Helper method for determinant
+	 * Returns the determinant of a square matrix
+	 * @return The determinant of a square matrix
+	 */
+	private double computeDet()
+	{
+		//if 1x1 returns itself
+		if (rows == 1 && columns == 1)
+			return elements[0][0];
+		//if 2x2 reduces det
+		else if (rows == 2 && columns == 2)
+			return elements[0][0] * elements[1][1] - elements[1][0] * elements[0][1];
+		//if it's not 2x2 it reduces it to dets of smaller matrices
+		else
 		{
+			double determinant = 0;
+			//the smaller matrix
 			Matrix smaller;
+			//the scaling factor of the determinants
 			double multiply;
 			for (int i = 0; i < rows; i++)
 			{
+				//creates a new Matrix with the same elements
 				smaller = new Matrix(elements);
+				//finds the scaling factor
 				multiply = smaller.getElements()[i][0];
+				//deletes the corresponding rows
 				smaller.deleteRow(i);
 				smaller.deleteColumn(0);
-				determinant += multiply *smaller.determinant() * Math.pow(-1, i);
+				//adds the number of the smaller matrix
+				if (smaller.getRows() != 0 && smaller.getColumns() != 0)
+					determinant += multiply * smaller.determinant() * Math.pow(-1, i);
 			}
 			return determinant;
 		}
+	}
+	
+	/**
+	 * Helper method for deleteRow
+	 * Creates a new array without the row to delete
+	 * Sets the PIVs
+	 * @param delete The row to delete
+	 */
+	private void makeDeletedRow(int delete)
+	{
+		//there is one fewer row
+		double[][] deleted = new double[rows - 1][columns];
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < columns; j++)
+			{
+				//if it's before the deleted row, it simply transfers the element
+				if (i < delete)
+					deleted[i][j] = elements[i][j];
+				//if it's after, it ignores the deleted row and adds the next element
+				else if (i > delete)
+					deleted[i - 1][j] = elements[i][j];
+			}
+		}
+		rows -= 1;
+		elements = deleted;
+	}
+	
+	/**
+	 * Helper method for deleteColumn
+	 * Creates a new array without the column to delete
+	 * Sets the PIVs
+	 * @param delete The column to delete
+	 */
+	private void makeDeletedColumn(int delete)
+	{
+		//there is one fewer column
+		double[][] deleted = new double[rows][columns - 1];
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < columns; j++)
+			{
+				//if it's before the deleted column, it simply transfers the element
+				if (j < delete)
+					deleted[i][j] = elements[i][j];
+				//if it's after, it ignores the deleted column and adds the next element
+				else if (j > delete)
+					deleted[i][j - 1] = elements[i][j];
+			}
+		}
+		columns -= 1;
+		elements = deleted;
 	}
 }

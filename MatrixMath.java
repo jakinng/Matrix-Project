@@ -12,15 +12,9 @@ public class MatrixMath
 	 * @return The sum of mat1 and mat2
 	 * Precondition: mat1 and mat2 have the same dimensions
 	 */
-	public static Matrix add(Matrix mat1, Matrix mat2)
+	public static Matrix add(Matrix mat1, Matrix mat2) throws ArrayIndexOutOfBoundsException
 	{
-		//if they cannot be added
-		if (mat1.getRows() != mat2.getRows()
-				|| mat1.getColumns() != mat2.getColumns())
-		{
-			throw new java.lang.RuntimeException("They do not have the same dimensions.");
-		}
-		else
+		try
 		{
 			//could use either mat1 or mat2 here
 			int rows = mat1.getRows();
@@ -34,6 +28,11 @@ public class MatrixMath
 					sumArr[i][j] = mat1Elts[i][j] + mat2Elts[i][j];
 			//returning our added array
 			return new Matrix(sumArr);
+		}
+		catch (ArrayIndexOutOfBoundsException ex)
+		{
+			System.out.println("They do not have the same dimensions.");
+			return new Matrix(0, 0);
 		}
 	}
 	
@@ -76,15 +75,14 @@ public class MatrixMath
 	 * @return The result of the multiplication
 	 * Precondition: they can be multiplied
 	 */
-	public static Matrix multiply(Matrix mat1, Matrix mat2)
+	public static Matrix multiply(Matrix mat1, Matrix mat2) throws ArrayIndexOutOfBoundsException
 	{
-		//if they cannot be multiplied
-		if (mat1.getColumns() != mat2.getRows())
+		try
 		{
-			throw new java.lang.RuntimeException("They cannot be multiplied.");
-		}
-		else
-		{
+			if (mat1.getColumns() != mat2.getRows())
+			{
+				throw new ArrayIndexOutOfBoundsException();
+			}
 			//finding dimensions of final matrix
 			int rows = mat1.getRows();
 			int columns = mat2.getColumns();
@@ -104,6 +102,12 @@ public class MatrixMath
 				}
 			//returning the multiplied matrix
 			return new Matrix(multiplied);
+		}
+		//if they cannot be multiplied
+		catch (ArrayIndexOutOfBoundsException ex)
+		{
+			System.out.println("They do not have the same dimensions.");
+			return new Matrix(0, 0);
 		}
 	}
 }
